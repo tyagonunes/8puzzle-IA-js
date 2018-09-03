@@ -2,6 +2,7 @@
 
 var abertos = []
 var fechados = []
+var solucao = []
 var pilhaFilhosDeX = []
 
 var meta = [	
@@ -12,9 +13,9 @@ var meta = [
 
 
 var estadoLivro = [	
-    ["1","2","3"],	// estado do livro
-    ["4","5","6"],
-    ["7","","8"] 
+    ["7","1","3"],	// estado inicial
+    ["2","6",""],
+    ["5","4","8"] 
 ];
 
 /* objeto nodo:
@@ -43,20 +44,17 @@ function comecar() {
 
 
 function iteracaoBusca() {
-    let i = 0
     while(abertos.length > 0) {
-        i++;
         // Remove o nodo do estado mais a esquerda em abertos
-        let x = abertos[0] 
-        abertos.shift();
-        console.log("Aberto", abertos)
-        console.log("Fechado", fechados)
-        // Estrai o estado do nodo
+        let x = abertos.pop();
+        console.log("tamanho de abertos", abertos.length)
+        console.log("tamanho de fechados", fechados.length)
+        // Extrai o estado do nodo
         let estado = x.estado
         // Compara com o estado meta
         let objetivo = comparaEstados(estado, meta)
         if(objetivo) { 
-            console.log(estado)
+            console.log(x)
             return "Sucesso" 
         }
         else {
@@ -95,9 +93,9 @@ function geraFilhos(nodo) {
 
         for (var j=0; j<3; j++) {
 
-            if (nodo.estado[i][j] == "") {  // localiza o espa�o em branco
+            if (nodo.estado[i][j] == "") {  // localiza o espaço em branco
                 
-                // gera os filhos poss�veis e coloca na pilha
+                // gera os filhos possiveis e coloca na pilha
                 if (i > 0)
                 empilhaFilho(nodo,i,j,i-1,j);   // move o branco para cima
                 if (i < 2)
