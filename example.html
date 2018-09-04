@@ -223,14 +223,15 @@ function iteracaoBusca(modo,pmax) {
 			calculaTempo();
 			alert("SOLU��O ENCONTRADA!\n\nClique OK para aprender :P");
 			solucao.push(nodo.estado);	// reconstr�i o caminho at� o estado inicial
+			
 			while (nodo.pai) {
 				nodo = nodo.pai;
 				solucao.push(nodo.estado);
 			}
+			
 			estado = solucao.pop();	// retira o �ltimo estado empilhado (estado inicial)
 			exibeEstado(estado);	// volta o tabuleiro ao estado inicial
-			document.getElementById("solucao").style.display = ''; // exibe dados da solu��o
-			document.getElementById("solucaoBotao").style.display = '';
+			document.getElementById("solucaoBotao").style.display = 'block';
 			return;
 		}
 		else {

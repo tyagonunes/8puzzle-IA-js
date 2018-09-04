@@ -5,6 +5,7 @@ var fechados = []
 var solucao = []
 var pilhaFilhosDeX = []
 const celulas = document.querySelectorAll('.celula');
+const numeros = document.querySelectorAll('.number')
 
 var meta = [
     ["1", "2", "3"],	// estado objetivo
@@ -13,75 +14,52 @@ var meta = [
 ];
 
 
-var estadoLivro = [
+var estadoInicial = [
     ["7", "1", "3"],	// estado inicial
     ["2", "6", ""],
     ["5", "4", "8"]
 ];
 
-// Transforma o array dado em um array exibível em tela
-var estadoLivroTransformed = estadoLivro.concat(estadoLivro[0], estadoLivro[1], estadoLivro[2]);
-// Limpa o array
-for (let i = 2; i >= 0; i--) {
-    var removed = estadoLivroTransformed.splice(i, 1);
-}
-console.log(estadoLivroTransformed);
-// Preenche o array inicial em tela
-for (let index = 0; index < estadoLivroTransformed.length; index++) {
-    celulas[index].innerText = estadoLivroTransformed[index];
-}
+var estado2  = [
+    ["4", "2", "3"],	// estado inicial
+    ["6", "", "1"],
+    ["7", "5", "8"]
+];
 
-/* objeto nodo:
+configInicial()
 
-	{ 
-        estado: array[3][3] de char
-	    pai: ponteiro para nodo,
-    }
-*/
-var nodoInicial = {
-    estado: copiaEstado(estadoLivro),
-    pai: null
-}
-
-function mostrarNaTela(estado) {
-    var estadoFinal = estado;
-    estadoFinal = estadoFinal.concat(estadoFinal[0], estadoFinal[1], estadoFinal[2]);
-    for (let i = 2; i >= 0; i--) {
-        estadoFinal.splice(i, 1);
-    }
-    for (let index = 0; index < estadoFinal.length; index++) {
-        celulas[index].innerText = estadoFinal[index];
-        celulas[index].style.color = 'white';
-        celulas[index].style.backgroundColor = 'green';
-    }
-    console.log(estadoFinal);
-}
-
-// comecar();
-
-function comecar() {
-    abertos.push(nodoInicial)
-
-    var result = iteracaoBusca()
-
-    console.log(result)
-}
 
 
 function iteracaoBusca() {
+    var nodoInicial = {
+        estado: copiaEstado(estadoInicial),
+        pai: null
+    }
+    abertos.push(nodoInicial)
+
+
     while (abertos.length > 0) {
         // Remove o nodo do estado mais a esquerda em abertos
         let x = abertos.pop();
-        console.log("tamanho de abertos", abertos.length)
-        console.log("tamanho de fechados", fechados.length)
+
         // Extrai o estado do nodo
         let estado = x.estado
         // Compara com o estado meta
         let objetivo = comparaEstados(estado, meta)
-        if (objetivo) {
-            console.log(x)
-            mostrarNaTela(estado)
-            return "Sucesso"
+        
+        if(objetivo) { 
+                
+            solucao.push(x.estado);	// reconstr�i o caminho at� o estado inicial
+            
+            while (x.pai) {
+                x = x.pai;
+				solucao.push(x.estado);
+            }
+            x = solucao.pop();	// retira o ultimo estado empilhado (estado inicial)
+            
+            mostrarNaTela(x);	// volta o tabuleiro ao estado inicial
+            document.getElementById("solucaoBotao").style.display = 'block';
+            return; 
         }
         else {
             // Gera filhos de X
@@ -195,3 +173,51 @@ function verificaFilhoEmAbertosFechados(nodo) {
 
     return existEmAberto || existEmFechado
 };
+
+
+function exibeSolucao() {
+	if (solucao.length) {
+		estado = solucao.pop();
+        mostrarNaTela(estado)        
+	}
+}
+
+function mostrarNaTela(estado) {
+    var estadoFinal = estado;
+    estadoFinal = estadoFinal.concat(estadoFinal[0], estadoFinal[1], estadoFinal[2]);
+    for (let i = 2; i >= 0; i--) {
+        estadoFinal.splice(i, 1);
+    }
+    for (let index = 0; index < estadoFinal.length; index++) {
+        celulas[index].innerText = estadoFinal[index];
+        celulas[index].style.color = 'white';
+        celulas[index].style.backgroundColor = 'green';
+    }
+}
+
+
+function aplicarNumerosUsuario () {
+    
+    let l1 = [numeros[0].value, numeros[1].value, numeros[2].value]
+    let l2 = [numeros[3].value, numeros[4].value, numeros[5].value]
+    let l3 = [numeros[6].value, numeros[7].value, numeros[8].value]
+   
+    estadoInicial = [l1,l2,l3]
+
+    configInicial()
+}
+
+function configInicial(){
+
+    
+    // Transforma o array dado em um array exibível em tela
+    var estadoLivroTransformed = estadoInicial.concat(estadoInicial[0], estadoInicial[1], estadoInicial[2]);
+    // Limpa o array
+    for (let i = 2; i >= 0; i--) {
+        var removed = estadoLivroTransformed.splice(i, 1);
+    }
+    // Preenche o array inicial em tela
+    for (let index = 0; index < estadoLivroTransformed.length; index++) {
+        celulas[index].innerText = estadoLivroTransformed[index];
+    }
+} 
