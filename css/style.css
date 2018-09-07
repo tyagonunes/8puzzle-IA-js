@@ -28,7 +28,7 @@ table {
   background-color: #f4f5f7;
 }
 
-#solucaoBotao {
+#solucaoBotao, #reiniciar {
   display: none;
 }
 

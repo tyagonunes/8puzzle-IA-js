@@ -52,7 +52,7 @@ function iteracaoBusca() {
         if (modo == 'BA') {
             // Remove o estado mais esquerdo da fila em abertos e chama de x
             x = abertos.shift()
-        } else if(modo == 'BP') {
+        } else if (modo == 'BP') {
             // Remove o estado do topo da pilha em abertos e chama de x
             x = abertos.pop()
         }
@@ -104,7 +104,7 @@ function iteracaoBusca() {
                 // Na busca em profundidade o abertos é uma pilha
                 // Coloca os filhos que restam no topo da pilha de abertos
                 abertos = filhosValidosDeX.concat(abertos)
-            } else if(modo == 'BA') {
+            } else if (modo == 'BA') {
                 // Na busca em amplitude o abertos é uma fila
                 // Coloca os filhos que restam na fila de abertos
                 abertos = abertos.concat(filhosValidosDeX)
@@ -215,8 +215,15 @@ function verificaFilhoEmAbertosFechados(nodo) {
 // Ação do botao [Proximo passo] para exibir os passos da solução
 function exibeSolucao() {
     if (solucao.length) {
+        console.log(solucao.length);
         estado = solucao.pop();
         mostrarNaTela(estado)
+    }
+    // Mostra botão para reiniciar
+    if (solucao.length < 1) {
+        document.getElementById("reiniciar").style.display = 'block'
+        document.getElementById("resolver").disabled = true
+        document.getElementById("solucaoBotao").disabled = true
     }
 }
 
@@ -257,4 +264,8 @@ function configInicial() {
     for (let index = 0; index < estadoLivroTransformed.length; index++) {
         celulas[index].innerText = estadoLivroTransformed[index];
     }
-} 
+}
+// Limpa as peças e o cache da página atualizando-a
+function reiniciar() {
+    location.reload(true);
+}

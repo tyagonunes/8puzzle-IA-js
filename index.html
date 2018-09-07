@@ -20,19 +20,19 @@
                 <div class="m-b strong">Entrada de dados do usuário</div>
                 <table>
                     <tr>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
                     </tr>
                     <tr>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
                     </tr>
                     <tr>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
-                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
+                        <td class="cel" id=""><input type="text" class="number" minlength="1" maxlength="1" pattern="[1-8]{1}"></td>
                     </tr>
                 </table>
 
@@ -73,8 +73,9 @@
                     </div>
                 </div>
 
-                <button class="btn btn-info m-t" onclick="iteracaoBusca()">Resolver</button>
+                <button class="btn btn-info m-t" id="resolver" onclick="iteracaoBusca()">Resolver</button>
                 <button class="btn btn-success m-t" id="solucaoBotao" onclick="exibeSolucao()">Proximo passo</button>
+                <button class="btn btn-success m-t" id="reiniciar" onclick="reiniciar()">Reiniciar</button>
 
             </div>
         </div>
