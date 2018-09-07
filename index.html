@@ -10,54 +10,71 @@
     <title>8 Puzzle</title>
 </head>
 
-<body>
+<body class="padder-v">
 
     <div class="container">
 
         <div class="row">
-            <h2 class="m-t m-b">Resolução 8 puzzle com busca em profundidade</h2>
+            <h4 class="m-b-xxl center strong">Solução do problema 8 puzzle com busca em profundidade e amplitude</h4>
             <div class="col-md-6">
-                    <table>
-                        <tr>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                        </tr>
-                        <tr>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                        </tr>
-                        <tr>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                            <td class="cel" id=""><input type="text" class="number"></td>
-                        </tr>
-                    </table>
+                <div class="m-b strong">Entrada de dados do usuário</div>
+                <table>
+                    <tr>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                    </tr>
+                    <tr>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                    </tr>
+                    <tr>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                        <td class="cel" id=""><input type="text" class="number"></td>
+                    </tr>
+                </table>
 
-                    <button class="btn btn-info m-t" onclick="aplicarNumerosUsuario()">Aplicar</button>
-                    
+                <button class="btn btn-info m-t" onclick="aplicarNumerosUsuario()">Aplicar estado inicial</button>
+
+            </div>
+            <div class="col-md-6">
+                <div class="m-b strong">Quebra cabeça</div>
+                <table>
+                    <tr>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                    </tr>
+                    <tr>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                    </tr>
+                    <tr>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                        <td class="celula" id=""></td>
+                    </tr>
+                </table>
+
+                <div class="m-t">
+                    <div class="strong">Escolha o tipo de busca para a solução</div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="modo" id="modo1" value="BP" checked> Busca em profundidade
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="modo" id="modo2" value="BA"> Busca em amplitude
+                        </label>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <table>
-                        <tr>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                        </tr>
-                        <tr>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                        </tr>
-                        <tr>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                            <td class="celula" id=""></td>
-                        </tr>
-                    </table>
-                    <button class="btn btn-info m-t" onclick="iteracaoBusca()">Resolver</button>
-                    <button class="btn btn-success m-t" id="solucaoBotao" onclick="exibeSolucao()">Proximo passo</button>
+
+                <button class="btn btn-info m-t" onclick="iteracaoBusca()">Resolver</button>
+                <button class="btn btn-success m-t" id="solucaoBotao" onclick="exibeSolucao()">Proximo passo</button>
 
             </div>
         </div>

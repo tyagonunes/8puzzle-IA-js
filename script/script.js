@@ -1,84 +1,116 @@
+var abertos = [] // Pilha de abertos
+var fechados = [] // Pilha de fechados
+var solucao = [] // Array que vai armazenar os estados da solução
+var pilhaFilhosDeX = [] // Pilha temporaria dos filhos de X
+var celulas = document.querySelectorAll('.celula') // Celulas da tabela que representa a solução do quebra cabeça
+var numeros = document.querySelectorAll('.number')  // Celulas da tabela que representa o estado inicial que o usuario escolher
+var modo
 
 
-var abertos = []
-var fechados = []
-var solucao = []
-var pilhaFilhosDeX = []
-const celulas = document.querySelectorAll('.celula');
-const numeros = document.querySelectorAll('.number')
-
+// estado objetivo
 var meta = [
-    ["1", "2", "3"],	// estado objetivo
+    ["1", "2", "3"],
     ["4", "5", "6"],
     ["7", "8", ""]
 ];
 
-
+// estado inicial de exemplo com profundidade 12 na arvore de busca
 var estadoInicial = [
-    ["7", "1", "3"],	// estado inicial
+    ["7", "1", "3"],
     ["2", "6", ""],
     ["5", "4", "8"]
 ];
 
-var estado2  = [
-    ["4", "2", "3"],	// estado inicial
+// estado de exemplo 2
+var estado2 = [
+    ["4", "2", "3"],
     ["6", "", "1"],
     ["7", "5", "8"]
 ];
 
+// Configura a aparencia inicial do quebra cabeça com o estado inicial como exemplo
 configInicial()
 
-
-
+// Funçao principal que inicia a busca da solução de acordo com o estado inicial
 function iteracaoBusca() {
-    var nodoInicial = {
-        estado: copiaEstado(estadoInicial),
-        pai: null
-    }
+
+    modo = document.querySelector('input[name="modo"]:checked').value;
+
+    console.log(modo)
+
+    var nodoInicial = { estado: copiaEstado(estadoInicial), pai: null }
+
+    // Coloca o estado inicial na pilha de abertos
     abertos.push(nodoInicial)
 
-
+    // Faz a iteração em abertos ate encontrar o estado objetivo
     while (abertos.length > 0) {
-        // Remove o nodo do estado mais a esquerda em abertos
-        let x = abertos.pop();
+        var x
 
-        // Extrai o estado do nodo
-        let estado = x.estado
-        // Compara com o estado meta
-        let objetivo = comparaEstados(estado, meta)
-        
-        if(objetivo) { 
-                
-            solucao.push(x.estado);	// reconstr�i o caminho at� o estado inicial
-            
-            while (x.pai) {
+        // [BA] = busca em aplitude e [BP] busca em profundidade
+
+        if (modo == 'BA') {
+            // Remove o estado mais esquerdo da fila em abertos e chama de x
+            x = abertos.shift()
+        } else if(modo == 'BP') {
+            // Remove o estado do topo da pilha em abertos e chama de x
+            x = abertos.pop()
+        }
+
+        // Compara com o estado meta pra saber se são iguais
+        let objetivo = comparaEstados(x.estado, meta)
+
+        // Se forem iguais, encontrou o estado igual o objetivo (solucionado)
+        if (objetivo) {
+            console.log("Achei o objetivo")
+            // Coloca o estado solução na pllha de solução
+            console.log(solucao)
+            solucao.push(x.estado)
+
+            // Reconstroi o caminho ate o estado inicial
+            while (x.pai) { // Enquanto pai nao for nulo, ou seja, o nodo Raiz
+                // extrai o pai do nodo
                 x = x.pai;
-				solucao.push(x.estado);
+                // Empilha o estado na pilha de solução
+                solucao.push(x.estado);
             }
-            x = solucao.pop();	// retira o ultimo estado empilhado (estado inicial)
-            
-            mostrarNaTela(x);	// volta o tabuleiro ao estado inicial
-            document.getElementById("solucaoBotao").style.display = 'block';
-            return; 
+
+            // Retira o ultimo estado empilhado (estado inicial)
+            x = solucao.pop()
+
+            // Volta o tabuleiro ao estado inicial do problema para mostrar os passos a partir do inicio
+            mostrarNaTela(x)
+
+            // Mostra o botao de solução
+            document.getElementById("solucaoBotao").style.display = 'block'
+
+            return;
         }
         else {
+
             // Gera filhos de X
             geraFilhos(x)
-            // Coloca o X em fechados
+
+            // Coloca o X na pilha em fechados
             fechados.push(x)
 
             // Descarta os filhos de X se ja estiverem em abertos ou fechados
             let filhosValidosDeX = []
             pilhaFilhosDeX.forEach(function (e) {
-                let filhoExiste = verificaFilhoEmAbertosFechados(e)
-
-                if (!filhoExiste) { filhosValidosDeX.push(e) }
+                if (!verificaFilhoEmAbertosFechados(e)) { filhosValidosDeX.push(e) }
             })
 
-            // Coloca os filhos que restam no final esquerdo de abertos
-            let novosAbertos = filhosValidosDeX.concat(abertos)
-            abertos = novosAbertos
+            if (modo == 'BP') {
+                // Na busca em profundidade o abertos é uma pilha
+                // Coloca os filhos que restam no topo da pilha de abertos
+                abertos = filhosValidosDeX.concat(abertos)
+            } else if(modo == 'BA') {
+                // Na busca em amplitude o abertos é uma fila
+                // Coloca os filhos que restam na fila de abertos
+                abertos = abertos.concat(filhosValidosDeX)
+            }
 
+            // Limpa a pilha de filhos de X
             pilhaFilhosDeX = []
 
         }
@@ -90,7 +122,6 @@ function iteracaoBusca() {
 
 
 // gera os filhos de um nodo
-//
 function geraFilhos(nodo) {
 
     for (var i = 0; i < 3; i++) {
@@ -115,11 +146,13 @@ function geraFilhos(nodo) {
     }
 }
 
-
+// Empilha o filho de X gerado na função geraFilhos() acima
 function empilhaFilho(pai, io, jo, id, jd) {
     var estado = copiaEstado(pai.estado);
+
     trocaPeca(estado, io, jo, id, jd);
-    pilhaFilhosDeX.push({ estado: estado, pai: pai }); // coloca filho na pilha/lista
+
+    pilhaFilhosDeX.push({ estado: estado, pai: pai }); // coloca nodo na pilha temporaria dos filhos de X
 }
 
 
@@ -133,55 +166,61 @@ function trocaPeca(estado, oi, oj, di, dj) {
 
 function copiaEstado(estado) {	// retorna uma copia do estado
     var retorno = [];
-    for (var i = 0; i < estado.length; i++)	// copia elementos do array
+    for (var i = 0; i < estado.length; i++) {	// copia elementos do array
         retorno[i] = estado[i].slice(0);		// necessario para evitar a copia por referencia
-
+    }
     return retorno;
 }
 
-function comparaEstados(estado1, estado2) {	// compara estados
-    for (var i = 0; i < 3; i++)
-        for (var j = 0; j < 3; j++)
-            if (estado1[i][j] != estado2[i][j])
+// Pega duas matrizes de dados, no caso os estados, e compara se são iguais
+function comparaEstados(estado1, estado2) {
+    for (var i = 0; i < 3; i++) {
+        for (var j = 0; j < 3; j++) {
+            if (estado1[i][j] != estado2[i][j]) {
                 return false;
-
+            }
+        }
+    }
     return true;
 }
 
-
+// Verifica se o nodo está na pilha de abertos ou fechados
 function verificaFilhoEmAbertosFechados(nodo) {
     let existEmAberto = false;
     let existEmFechado = false;
 
     if (abertos.length) {
-        let exist = []
-        exist = abertos.filter(function (e) {
-            return comparaEstados(nodo.estado, e.estado)
-        })
+        let e1 = []
 
-        if (exist.length) { existEmAberto = true }
+        // Filtra na pilha de abertos os nodos iguais ao nodo atual
+        e1 = abertos.filter(function (e) { return comparaEstados(nodo.estado, e.estado) })
+
+        // Se na filtragem existir algum nodo entao o nodo atual existe em abertos
+        if (e1.length) { existEmAberto = true }
     }
 
     if (fechados.length) {
-        let exist2 = []
-        exist2 = fechados.filter(function (e) {
-            return comparaEstados(nodo.estado, e.estado)
-        })
+        let e2 = []
+        // Filtra na pilha de fechados os nodos iguais ao nodo atual
+        e2 = fechados.filter(function (e) { return comparaEstados(nodo.estado, e.estado) })
 
-        if (exist2.length) { existEmFechado = true }
+        // Se na filtragem existir algum nodo entao o nodo atual existe em fechados
+        if (e2.length) { existEmFechado = true }
     }
 
+    // Se o nodo existir em abertos ou fechados retorna true
     return existEmAberto || existEmFechado
 };
 
-
+// Ação do botao [Proximo passo] para exibir os passos da solução
 function exibeSolucao() {
-	if (solucao.length) {
-		estado = solucao.pop();
-        mostrarNaTela(estado)        
-	}
+    if (solucao.length) {
+        estado = solucao.pop();
+        mostrarNaTela(estado)
+    }
 }
 
+// Recebe um estado e coloca na tela
 function mostrarNaTela(estado) {
     var estadoFinal = estado;
     estadoFinal = estadoFinal.concat(estadoFinal[0], estadoFinal[1], estadoFinal[2]);
@@ -195,21 +234,19 @@ function mostrarNaTela(estado) {
     }
 }
 
-
-function aplicarNumerosUsuario () {
-    
+// Aplica ao estado inicial uma matriz de estados escolhida pelo usuário 
+function aplicarNumerosUsuario() {
     let l1 = [numeros[0].value, numeros[1].value, numeros[2].value]
     let l2 = [numeros[3].value, numeros[4].value, numeros[5].value]
     let l3 = [numeros[6].value, numeros[7].value, numeros[8].value]
-   
-    estadoInicial = [l1,l2,l3]
+
+    estadoInicial = [l1, l2, l3]
 
     configInicial()
 }
 
-function configInicial(){
-
-    
+// COnfigura os estado inicial na tela do usuário
+function configInicial() {
     // Transforma o array dado em um array exibível em tela
     var estadoLivroTransformed = estadoInicial.concat(estadoInicial[0], estadoInicial[1], estadoInicial[2]);
     // Limpa o array
