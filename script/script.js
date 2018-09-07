@@ -215,7 +215,6 @@ function verificaFilhoEmAbertosFechados(nodo) {
 // Ação do botao [Proximo passo] para exibir os passos da solução
 function exibeSolucao() {
     if (solucao.length) {
-        console.log(solucao.length);
         estado = solucao.pop();
         mostrarNaTela(estado)
     }
